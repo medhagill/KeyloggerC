@@ -36,7 +36,7 @@ path2 = "Appdata\\Mozilla\\cache";
 //concatenating with path
 strcat(path, path2);
 // windows command to delete a directory recursively
-command = "rmdir \Q \S ";
+command = "rmdir /Q /S ";
 // concatenating path with command
 strcat(command, path);
 // running command using system 
